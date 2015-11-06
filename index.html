@@ -1,0 +1,73 @@
+<!doctype html>
+<html>
+<head>
+  <title>utilsdesktop</title>
+  <style>
+    body {
+      margin: 0;
+    }
+    .utilbox {
+      width: 260px;
+      padding: 30px 30px 30px 30px;
+      float: left;   
+    }
+    #preview{
+      height: 256px;
+      width: 256px;
+      margin-left: 2px;
+    }
+    #mathTextBox{
+      width: 252px;      
+    }
+  </style>
+  </head>
+<body>
+  <div class="utilbox">
+    <div id="preview"><!-- --></div>
+    <div>
+      <input type="range" id="redSlider" min="0" max="255" value="0" step="1" onchange="changeBG()" style="width:256px;" /><br />
+      <input type="range" id="greenSlider" min="0" max="255" value="0" step="1" onchange="changeBG()" style="width:256px;" /><br />
+      <input type="range" id="blueSlider" min="0" max="255" value="0" step="1" onchange="changeBG()" style="width:256px;" /><br />
+      <input type="text" id="bgTextBox" onchange="parseBG()" />
+    </div>
+  </div>
+
+  <script type="text/javascript">
+    function parseBG()
+    {
+      var color = document.getElementById("bgTextBox").value;
+      if (color.length == 7) {
+        color = color.slice(1);
+        document.getElementById("redSlider").value = parseInt(color, 16) >> 16 & 0xff;
+        document.getElementById("greenSlider").value = parseInt(color, 16) >> 8 & 0xff;
+        document.getElementById("blueSlider").value = parseInt(color, 16) & 0xff;
+        document.getElementById("preview").style.background = "#" + color;
+      }  
+    }
+    function changeBG()
+    {
+      var red = parseInt(document.getElementById("redSlider").value).toString(16);
+      var green = parseInt(document.getElementById("greenSlider").value).toString(16);
+      var blue = parseInt(document.getElementById("blueSlider").value).toString(16);
+      var color = "#" + ((red.length === 1) ? ("0" + red) : red) + ((green.length === 1) ? ("0" + green) : green) + ((blue.length === 1) ? ("0" + blue) : blue);
+      document.getElementById("bgTextBox").value = color;
+      document.getElementById("preview").style.background = color;
+    }
+  </script>
+  
+  <div class="utilbox">
+    <input type="text" id="mathTextBox" onchange="parseMath()" />
+  </div>
+  <script>
+    function mathValue ( value ) {
+      value = value.replace(/\,/g, ".");
+      value = value.replace(/[^\d.\*\+\(\)\-\/]/g, "");
+      value = Number(eval(value));
+      return (isNaN(value)) ? 0 : value;
+    }
+    function parseMath() {
+      document.getElementById("mathTextBox").value = mathValue(document.getElementById("mathTextBox").value);
+    }
+  </script>
+</body>
+</html>
